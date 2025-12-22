@@ -1,6 +1,7 @@
 ---
 layout: base.njk
-title: Home
+title: Fucking Approachable Swift Concurrency
+description: A no-bullshit guide to Swift concurrency. Learn async/await, actors, Sendable, and MainActor with simple mental models. No jargon, just clear explanations.
 ---
 
 <section class="hero">
@@ -8,6 +9,10 @@ title: Home
     <h1>Fucking Approachable<br><span class="accent">Swift Concurrency</span></h1>
     <p class="subtitle">A no-bullshit guide to understanding async/await, actors, and Sendable. No jargon. Just clear mental models.</p>
     <p class="tribute">In the tradition of <a href="https://fuckingblocksyntax.com/">fuckingblocksyntax.com</a> and <a href="https://fuckingifcaseletsyntax.com/">fuckingifcaseletsyntax.com</a></p>
+    <a href="https://tuist.dev" class="banner" target="_blank" rel="noopener">
+      <span class="banner-text">Need to build better apps faster?</span>
+      <span class="banner-cta">Check out Tuist &rarr;</span>
+    </a>
   </div>
 </section>
 

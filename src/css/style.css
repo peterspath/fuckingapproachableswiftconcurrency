@@ -1,17 +1,18 @@
 :root {
-  /* Ampcode-inspired warm color palette */
-  --color-bg: #dfdfc1;
-  --color-bg-alt: #ebe9d9;
+  /* Warm color palette with Swift orange */
+  --color-bg: #faf6f1;
+  --color-bg-alt: #f5ede4;
   --color-bg-dark: #282828;
-  --color-text: #0b0d0b;
-  --color-text-muted: #5a5a5a;
-  --color-border: rgba(11, 13, 11, 0.15);
+  --color-text: #1a1a1a;
+  --color-text-muted: #666;
+  --color-border: rgba(0, 0, 0, 0.1);
 
-  /* Accent colors */
-  --color-accent: #1588b2;
-  --color-accent-hover: #0e6a8a;
-  --color-success: #00ff88;
-  --color-warning: #fabd2f;
+  /* Swift orange accent colors */
+  --color-accent: #F05138;
+  --color-accent-hover: #d63d25;
+  --color-accent-light: #ff6f4a;
+  --color-success: #4a9c5d;
+  --color-warning: #e59a2f;
   --color-danger: #c20a1a;
 
   /* Code block colors (gruvbox-inspired) */
@@ -147,6 +148,35 @@ nav a:hover {
   text-decoration-color: var(--color-accent);
 }
 
+/* Banner */
+.banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding: 0.875rem 1.25rem;
+  background: var(--color-accent);
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.banner:hover {
+  background: var(--color-accent-hover);
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
+.banner-text {
+  opacity: 0.9;
+}
+
+.banner-cta {
+  font-weight: 600;
+}
+
 /* Sections */
 section {
   padding: 3.5rem 0;
@@ -221,15 +251,15 @@ p {
 }
 
 .tip {
-  background: rgba(0, 255, 136, 0.08);
-  border: 1px solid rgba(0, 255, 136, 0.25);
+  background: rgba(74, 156, 93, 0.1);
+  border: 1px solid rgba(74, 156, 93, 0.3);
   padding: 1.5rem;
   margin: 2rem 0;
   border-radius: 4px;
 }
 
 .tip h4 {
-  color: #1a8a4c;
+  color: var(--color-success);
   margin-top: 0;
 }
 
@@ -378,6 +408,7 @@ table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.95rem;
+  margin-bottom: 1.5rem;
 }
 
 th, td {
