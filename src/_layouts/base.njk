@@ -59,12 +59,12 @@
     <div class="container">
       <a href="/" class="logo">Fucking Approachable Swift Concurrency</a>
       <nav>
-        <a href="#basics">Basics</a>
-        <a href="#async-await">Async/Await</a>
-        <a href="#actors">Actors</a>
+        <a href="#basics">Isolation</a>
+        <a href="#domains">Domains</a>
         <a href="#sendable">Sendable</a>
+        <a href="#async-await">Async/Await</a>
         <a href="#patterns">Patterns</a>
-        <a href="#glossary">Glossary</a>
+        <a href="#errors">Errors</a>
       </nav>
     </div>
   </header>
@@ -81,5 +81,21 @@
       <p><a href="https://github.com/pepicrft/fuckingapproachableswiftconcurrency">View on GitHub</a></p>
     </div>
   </footer>
+
+  <script>
+    document.querySelectorAll('.code-tabs').forEach(tabs => {
+      const buttons = tabs.querySelectorAll('.code-tabs-nav button');
+      const contents = tabs.querySelectorAll('.code-tab-content');
+
+      buttons.forEach((button, index) => {
+        button.addEventListener('click', () => {
+          buttons.forEach(b => b.classList.remove('active'));
+          contents.forEach(c => c.classList.remove('active'));
+          button.classList.add('active');
+          contents[index].classList.add('active');
+        });
+      });
+    });
+  </script>
 </body>
 </html>
