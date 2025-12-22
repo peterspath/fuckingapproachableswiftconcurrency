@@ -562,3 +562,88 @@ blockquote {
   color: var(--color-text-muted);
   font-style: italic;
 }
+
+/* Isolation Domain Highlighting */
+.isolation-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.8rem;
+  font-family: var(--font-sans);
+}
+
+.isolation-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.isolation-legend-item::before {
+  content: "";
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.isolation-legend-item.main::before {
+  background: rgba(240, 81, 56, 0.35);
+}
+
+.isolation-legend-item.detached::before {
+  background: rgba(147, 112, 219, 0.35);
+}
+
+.isolation-legend-item.actor::before {
+  background: rgba(66, 165, 245, 0.35);
+}
+
+.isolation-legend-item.nonisolated::before {
+  background: rgba(156, 163, 175, 0.35);
+}
+
+/* Code block with isolation sidebar */
+.code-isolation {
+  position: relative;
+  margin: 1.5rem 0;
+}
+
+.code-isolation pre {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+/* Isolation sidebar - shows colored segments */
+.isolation-sidebar {
+  position: absolute;
+  left: 0.5rem;
+  top: 1.25rem;
+  bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  width: 4px;
+  border-radius: 2px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.isolation-sidebar .segment {
+  flex-grow: 1;
+}
+
+.isolation-sidebar .segment.main {
+  background: #F05138;
+}
+
+.isolation-sidebar .segment.actor {
+  background: #42a5f5;
+}
+
+.isolation-sidebar .segment.detached {
+  background: #9370db;
+}
+
+.isolation-sidebar .segment.nonisolated {
+  background: #9ca3af;
+}

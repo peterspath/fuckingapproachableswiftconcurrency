@@ -121,6 +121,14 @@ The code reads top-to-bottom, but executes with pauses. No callback hell. No nes
 
 An actor is like a security guard standing in front of your data. Only one visitor allowed at a time.
 
+<div class="isolation-legend">
+  <span class="isolation-legend-item actor">Actor-isolated</span>
+</div>
+<div class="code-isolation">
+<div class="isolation-sidebar">
+  <div class="segment actor"></div>
+</div>
+
 ```swift
 actor BankAccount {
     var balance: Double = 0
@@ -130,6 +138,8 @@ actor BankAccount {
     }
 }
 ```
+
+</div>
 
 **Without actors:**
 Two threads read balance = 100, both add 50, both write 150. You lost $50.
@@ -156,6 +166,17 @@ If ANY condition is false, you probably don't need an actor.
 
 `@MainActor` is a special actor that runs on the main thread. Use it for UI code.
 
+<div class="isolation-legend">
+  <span class="isolation-legend-item main">MainActor</span>
+  <span class="isolation-legend-item nonisolated">Nonisolated (suspension)</span>
+</div>
+<div class="code-isolation">
+<div class="isolation-sidebar">
+  <div class="segment main" style="flex-grow: 5"></div>
+  <div class="segment nonisolated" style="flex-grow: 1"></div>
+  <div class="segment main" style="flex-grow: 3"></div>
+</div>
+
 ```swift
 @MainActor
 class ViewModel: ObservableObject {
@@ -167,6 +188,8 @@ class ViewModel: ObservableObject {
     }
 }
 ```
+
+</div>
 
 <div class="tip">
 <h4>Practical advice</h4>
@@ -245,6 +268,17 @@ If Swift says something isn't Sendable, you have options:
 
 ### The Network Request Pattern
 
+<div class="isolation-legend">
+  <span class="isolation-legend-item main">MainActor</span>
+  <span class="isolation-legend-item nonisolated">Nonisolated (network call)</span>
+</div>
+<div class="code-isolation">
+<div class="isolation-sidebar">
+  <div class="segment main" style="flex-grow: 7"></div>
+  <div class="segment nonisolated" style="flex-grow: 2"></div>
+  <div class="segment main" style="flex-grow: 6"></div>
+</div>
+
 ```swift
 @MainActor
 class ViewModel: ObservableObject {
@@ -263,6 +297,8 @@ class ViewModel: ObservableObject {
     }
 }
 ```
+
+</div>
 
 No `DispatchQueue.main.async`. The `@MainActor` attribute handles it.
 
@@ -323,6 +359,14 @@ These are [common mistakes](https://www.massicotte.org/mistakes-with-concurrency
 
 ### Mistake 1: Thinking async = background
 
+<div class="isolation-legend">
+  <span class="isolation-legend-item main">MainActor (blocked!)</span>
+</div>
+<div class="code-isolation">
+<div class="isolation-sidebar">
+  <div class="segment main"></div>
+</div>
+
 ```swift
 // This STILL blocks the main thread!
 @MainActor
@@ -330,7 +374,23 @@ func slowFunction() async {
     let result = expensiveCalculation()  // Synchronous = blocking
     data = result
 }
+```
 
+</div>
+
+<div class="isolation-legend">
+  <span class="isolation-legend-item main">MainActor</span>
+  <span class="isolation-legend-item detached">Detached (background)</span>
+</div>
+<div class="code-isolation">
+<div class="isolation-sidebar">
+  <div class="segment nonisolated" style="flex-grow: 2"></div>
+  <div class="segment detached" style="flex-grow: 3"></div>
+  <div class="segment main" style="flex-grow: 1"></div>
+  <div class="segment nonisolated" style="flex-grow: 1"></div>
+</div>
+
+```swift
 // Fix: Move work off MainActor
 func slowFunction() async {
     let result = await Task.detached {
@@ -339,6 +399,8 @@ func slowFunction() async {
     await MainActor.run { data = result }
 }
 ```
+
+</div>
 
 ### Mistake 2: Actors everywhere
 
@@ -561,6 +623,17 @@ Beyond the core concepts, here are other Swift concurrency keywords you'll see i
 
 Use when you need a computed property that doesn't touch mutable state:
 
+<div class="isolation-legend">
+  <span class="isolation-legend-item actor">Actor-isolated</span>
+  <span class="isolation-legend-item nonisolated">Nonisolated</span>
+</div>
+<div class="code-isolation">
+<div class="isolation-sidebar">
+  <div class="segment actor" style="flex-grow: 4"></div>
+  <div class="segment nonisolated" style="flex-grow: 4"></div>
+  <div class="segment actor" style="flex-grow: 1"></div>
+</div>
+
 ```swift
 actor UserSession {
     let userId: String  // Immutable, safe to read
@@ -571,7 +644,11 @@ actor UserSession {
         "User: \(userId)"  // Only reads immutable data
     }
 }
+```
 
+</div>
+
+```swift
 // Usage
 let session = UserSession(userId: "123")
 print(session.displayId)  // No await needed!
@@ -610,6 +687,18 @@ func runLater(_ work: @Sendable @escaping () -> Void) {
 
 Convert completion-handler APIs to async/await:
 
+<div class="isolation-legend">
+  <span class="isolation-legend-item main">Async context</span>
+  <span class="isolation-legend-item nonisolated">Callback context</span>
+</div>
+<div class="code-isolation">
+<div class="isolation-sidebar">
+  <div class="segment nonisolated" style="flex-grow: 5"></div>
+  <div class="segment main" style="flex-grow: 2"></div>
+  <div class="segment nonisolated" style="flex-grow: 3"></div>
+  <div class="segment main" style="flex-grow: 2"></div>
+</div>
+
 ```swift
 // Old callback-based API
 func fetchUser(id: String, completion: @escaping (User?) -> Void) {
@@ -620,12 +709,17 @@ func fetchUser(id: String, completion: @escaping (User?) -> Void) {
 func fetchUser(id: String) async -> User? {
     await withCheckedContinuation { continuation in
         fetchUser(id: id) { user in
-            continuation.resume(returning: user)
+            continuation.resume(returning: user)  // Bridges back!
         }
     }
 }
+```
 
-// For throwing functions, use withCheckedThrowingContinuation
+</div>
+
+For throwing functions, use `withCheckedThrowingContinuation`:
+
+```swift
 func fetchUserThrowing(id: String) async throws -> User {
     try await withCheckedThrowingContinuation { continuation in
         fetchUser(id: id) { result in
@@ -698,6 +792,19 @@ func processLargeDataset(_ items: [Item]) async throws -> [Result] {
 
 Use sparingly - when you truly need work outside the current actor:
 
+<div class="isolation-legend">
+  <span class="isolation-legend-item main">MainActor</span>
+  <span class="isolation-legend-item detached">Detached</span>
+</div>
+<div class="code-isolation">
+<div class="isolation-sidebar">
+  <div class="segment main" style="flex-grow: 10"></div>
+  <div class="segment detached" style="flex-grow: 2"></div>
+  <div class="segment main" style="flex-grow: 1"></div>
+  <div class="segment detached" style="flex-grow: 1"></div>
+  <div class="segment main" style="flex-grow: 3"></div>
+</div>
+
 ```swift
 @MainActor
 class ImageProcessor {
@@ -717,6 +824,8 @@ class ImageProcessor {
     }
 }
 ```
+
+</div>
 
 <div class="warning">
 <h4>Task.detached is usually wrong</h4>
