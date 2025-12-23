@@ -2,14 +2,23 @@
 layout: base.njk
 title: Fucking Approachable Swift Concurrency
 description: A no-bullshit guide to Swift concurrency. Learn async/await, actors, Sendable, and MainActor with simple mental models. No jargon, just clear explanations.
+lang: en
+dir: ltr
+nav:
+  isolation: Isolation
+  domains: Domains
+  patterns: Patterns
+  errors: Errors
+footer:
+  madeWith: Made with frustration and love. Because Swift concurrency doesn't have to be confusing.
+  viewOnGitHub: View on GitHub
 ---
 
 <section class="hero">
   <div class="container">
     <h1>Fucking Approachable<br><span class="accent">Swift Concurrency</span></h1>
     <p class="subtitle">Finally understand async/await, actors, and Sendable. Clear mental models, no jargon.</p>
-    <p class="credit">Huge thanks to <a href="https://www.massicotte.org/">Matt Massicotte</a> for making Swift concurrency understandable.</p>
-    <p class="credit">Put together by <a href="https://pepicrft.me">Pedro Piñera</a>. Found an issue? <a href="mailto:pedro@tuist.dev">pedro@tuist.dev</a></p>
+    <p class="credit">Huge thanks to <a href="https://www.massicotte.org/">Matt Massicotte</a> for making Swift concurrency understandable. Put together by <a href="https://pepicrft.me">Pedro Piñera</a>. Found an issue? <a href="mailto:pedro@tuist.dev">pedro@tuist.dev</a></p>
     <p class="tribute">In the tradition of <a href="https://fuckingblocksyntax.com/">fuckingblocksyntax.com</a> and <a href="https://fuckingifcaseletsyntax.com/">fuckingifcaseletsyntax.com</a></p>
   </div>
 </section>

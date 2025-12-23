@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ lang | default('en') }}" dir="{{ dir | default('ltr') }}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,18 +10,31 @@
   <meta name="keywords" content="Swift, concurrency, async, await, actors, Sendable, MainActor, iOS, macOS, Swift 6, tutorial, guide">
   <meta name="author" content="Fucking Approachable Swift Concurrency">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://fuckingapproachableswiftconcurrency.com/">
+  <link rel="canonical" href="https://fuckingapproachableswiftconcurrency.com{{ page.url }}">
+
+  <!-- Language alternates -->
+  <link rel="alternate" hreflang="en" href="https://fuckingapproachableswiftconcurrency.com/en/">
+  <link rel="alternate" hreflang="es" href="https://fuckingapproachableswiftconcurrency.com/es/">
+  <link rel="alternate" hreflang="pt" href="https://fuckingapproachableswiftconcurrency.com/pt/">
+  <link rel="alternate" hreflang="ko" href="https://fuckingapproachableswiftconcurrency.com/ko/">
+  <link rel="alternate" hreflang="ja" href="https://fuckingapproachableswiftconcurrency.com/ja/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://fuckingapproachableswiftconcurrency.com/zh-CN/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://fuckingapproachableswiftconcurrency.com/zh-TW/">
+  <link rel="alternate" hreflang="ar" href="https://fuckingapproachableswiftconcurrency.com/ar/">
+  <link rel="alternate" hreflang="ru" href="https://fuckingapproachableswiftconcurrency.com/ru/">
+  <link rel="alternate" hreflang="x-default" href="https://fuckingapproachableswiftconcurrency.com/en/">
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://fuckingapproachableswiftconcurrency.com/">
+  <meta property="og:url" content="https://fuckingapproachableswiftconcurrency.com{{ page.url }}">
   <meta property="og:title" content="{{ title }}">
   <meta property="og:description" content="{{ description }}">
   <meta property="og:site_name" content="Fucking Approachable Swift Concurrency">
+  <meta property="og:locale" content="{{ lang | default('en') }}">
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:url" content="https://fuckingapproachableswiftconcurrency.com/">
+  <meta name="twitter:url" content="https://fuckingapproachableswiftconcurrency.com{{ page.url }}">
   <meta name="twitter:title" content="{{ title }}">
   <meta name="twitter:description" content="{{ description }}">
 
@@ -36,6 +49,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  {% if lang == "ar" %}
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  {% elif lang == "ko" %}
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+  {% elif lang == "ja" %}
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+  {% elif lang == "zh-CN" or lang == "zh-TW" %}
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+  {% elif lang == "ru" %}
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&subset=cyrillic&display=swap" rel="stylesheet">
+  {% endif %}
 
   <!-- Structured Data -->
   <script type="application/ld+json">
@@ -45,7 +69,7 @@
     "name": "Fucking Approachable Swift Concurrency",
     "description": "{{ description }}",
     "url": "https://fuckingapproachableswiftconcurrency.com/",
-    "inLanguage": "en",
+    "inLanguage": "{{ lang | default('en') }}",
     "about": {
       "@type": "Thing",
       "name": "Swift Concurrency",
@@ -54,18 +78,31 @@
   }
   </script>
 </head>
-<body>
+<body class="{% if dir == 'rtl' %}rtl{% endif %}">
   <header class="site-header">
     <div class="container">
-      <a href="/" class="logo">Fucking Approachable Swift Concurrency</a>
+      <a href="/{{ lang | default('en') }}/" class="logo">{{ logoText | default('Fucking Approachable Swift Concurrency') }}</a>
       <nav>
-        <a href="#basics">Isolation</a>
-        <a href="#domains">Domains</a>
+        <a href="#basics">{{ nav.isolation | default('Isolation') }}</a>
+        <a href="#domains">{{ nav.domains | default('Domains') }}</a>
         <a href="#sendable">Sendable</a>
         <a href="#async-await">Async/Await</a>
-        <a href="#patterns">Patterns</a>
-        <a href="#errors">Errors</a>
+        <a href="#patterns">{{ nav.patterns | default('Patterns') }}</a>
+        <a href="#errors">{{ nav.errors | default('Errors') }}</a>
       </nav>
+      <div class="language-selector">
+        <button class="language-toggle" aria-label="Select language" aria-expanded="false">
+          <span class="current-lang">{{ languages[lang].native | default('English') }}</span>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+        </button>
+        <div class="language-dropdown" role="menu">
+          {% for langCode, langData in languages %}
+          <a href="/{{ langCode }}/" role="menuitem" {% if langCode == lang %}aria-current="page"{% endif %}>
+            {{ langData.native }}
+          </a>
+          {% endfor %}
+        </div>
+      </div>
     </div>
   </header>
 
@@ -75,8 +112,8 @@
 
   <footer class="site-footer">
     <div class="container">
-      <p>Made with frustration and love. Because Swift concurrency doesn't have to be confusing.</p>
-      <p><a href="https://github.com/pepicrft/fuckingapproachableswiftconcurrency">View on GitHub</a></p>
+      <p>{{ footer.madeWith | default('Made with frustration and love. Because Swift concurrency doesn\'t have to be confusing.') }}</p>
+      <p><a href="https://github.com/pepicrft/fuckingapproachableswiftconcurrency">{{ footer.viewOnGitHub | default('View on GitHub') }}</a></p>
     </div>
   </footer>
 
@@ -92,6 +129,24 @@
           button.classList.add('active');
           contents[index].classList.add('active');
         });
+      });
+    });
+
+    // Language selector toggle
+    document.querySelectorAll('.language-selector').forEach(selector => {
+      const toggle = selector.querySelector('.language-toggle');
+      const dropdown = selector.querySelector('.language-dropdown');
+
+      toggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', !isExpanded);
+        dropdown.classList.toggle('show');
+      });
+
+      document.addEventListener('click', () => {
+        toggle.setAttribute('aria-expanded', 'false');
+        dropdown.classList.remove('show');
       });
     });
   </script>
